@@ -42,7 +42,7 @@ public class HelloWorldMain implements ExtensionMain {
             final @NotNull ExtensionStartOutput extensionStartOutput) {
 
         try {
-            addClientLifecycleEventListener();
+
             addPublishModifier();
 
             final ExtensionInformation extensionInformation = extensionStartInput.getExtensionInformation();
@@ -62,13 +62,7 @@ public class HelloWorldMain implements ExtensionMain {
         log.info("Stopped " + extensionInformation.getName() + ":" + extensionInformation.getVersion());
     }
 
-    private void addClientLifecycleEventListener() {
-        final EventRegistry eventRegistry = Services.eventRegistry();
 
-        final HelloWorldListener helloWorldListener = new HelloWorldListener();
-
-        eventRegistry.setClientLifecycleEventListener(input -> helloWorldListener);
-    }
 
     private void addPublishModifier() {
         final InitializerRegistry initializerRegistry = Services.initializerRegistry();

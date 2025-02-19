@@ -32,6 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * This tests the functionality of the {@link HelloWorldInterceptor}.
@@ -41,19 +42,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Yannick Weber
  * @since 4.3.1
+ *
+ * @contributor Dasha Samkova
+ * @since 4.36.0
  */
 @Testcontainers
 class HelloWorldInterceptorIT {
 
     @Container
     final @NotNull HiveMQContainer extension = new HiveMQContainer(DockerImageName.parse("hivemq/hivemq-ce").withTag("latest"))
-            .withExtension(MountableFile.forClasspathResource("hivemq-hello-world-extension"));
+            .withExtension(MountableFile.forClasspathResource("retain-extension"));
 
     @Test
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
-    void test_payload_modified() throws InterruptedException {
+    void test_retain_modified() throws InterruptedException {
         final Mqtt5BlockingClient client = Mqtt5Client.builder()
-                .identifier("hello-world-client")
+                .identifier("client1")
                 .serverPort(extension.getMqttPort())
                 .buildBlocking();
         client.connect();
@@ -61,10 +65,12 @@ class HelloWorldInterceptorIT {
         final Mqtt5BlockingClient.Mqtt5Publishes publishes = client.publishes(MqttGlobalPublishFilter.ALL);
         client.subscribeWith().topicFilter("hello/world").send();
 
-        client.publishWith().topic("hello/world").payload("Good Bye World!".getBytes(StandardCharsets.UTF_8)).send();
+        client.publishWith().topic("hello/world").payload("Good Bye World!".getBytes(StandardCharsets.UTF_8))
+                .retain(false)
+                .send();
 
         final Mqtt5Publish received = publishes.receive();
-        assertEquals("Hello World!", new String(received.getPayloadAsBytes(), StandardCharsets.UTF_8));
+        assertTrue(received.isRetain());
         publishes.close();
     }
 }

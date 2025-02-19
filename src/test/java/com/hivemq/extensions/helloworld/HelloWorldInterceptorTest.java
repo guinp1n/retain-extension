@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
- * @author Yannick Weber
+ * @author Dasha Samkova
  */
 class HelloWorldInterceptorTest {
 
@@ -49,18 +49,18 @@ class HelloWorldInterceptorTest {
     }
 
     @Test
-    void topicHelloWorld_payloadModified() {
-        when(publishPacket.getTopic()).thenReturn("hello/world");
+    void retainTrue_retainModified() {
+        when(publishPacket.getRetain()).thenReturn(true);
         helloWorldInterceptor.onInboundPublish(publishInboundInput, publishInboundOutput);
-        final ArgumentCaptor<ByteBuffer> captor = ArgumentCaptor.forClass(ByteBuffer.class);
-        verify(publishPacket).setPayload(captor.capture());
-        assertEquals("Hello World!", new String(captor.getValue().array(), StandardCharsets.UTF_8));
+        final ArgumentCaptor<Boolean> captor = ArgumentCaptor.forClass(Boolean.class);
+        verify(publishPacket).setRetain(captor.capture());
+        assertEquals(true, captor.getValue());
     }
 
     @Test
-    void topicNotHelloWorld_payloadNotModified() {
-        when(publishPacket.getTopic()).thenReturn("some/topic");
+    void retainNotTrue_retainNotModified() {
+        when(publishPacket.getRetain()).thenReturn(false);
         helloWorldInterceptor.onInboundPublish(publishInboundInput, publishInboundOutput);
-        verify(publishPacket, times(0)).setPayload(any());
+        verify(publishPacket, times(0)).setRetain(any());
     }
 }

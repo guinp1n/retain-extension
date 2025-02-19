@@ -25,11 +25,11 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 /**
- * This is a very simple {@link PublishInboundInterceptor},
- * it changes the payload of every incoming PUBLISH with the topic 'hello/world' to 'Hello World!'.
+ * This is a {@link PublishInboundInterceptor},
+ * it changes every incoming PUBLISH from the client1 and sets the Retain flag to true.
  *
- * @author Yannick Weber
- * @since 4.3.1
+ * @author Dasha Samkova
+ * @since 4.36.0
  */
 public class HelloWorldInterceptor implements PublishInboundInterceptor {
 
@@ -38,10 +38,9 @@ public class HelloWorldInterceptor implements PublishInboundInterceptor {
             final @NotNull PublishInboundInput publishInboundInput,
             final @NotNull PublishInboundOutput publishInboundOutput) {
 
-        final ModifiablePublishPacket publishPacket = publishInboundOutput.getPublishPacket();
-        if ("hello/world".equals(publishPacket.getTopic())) {
-            final ByteBuffer payload = ByteBuffer.wrap("Hello World!".getBytes(StandardCharsets.UTF_8));
-            publishPacket.setPayload(payload);
+        final ModifiablePublishPacket modifiablePublishPacket = publishInboundOutput.getPublishPacket();
+        if ("client1".equals(publishInboundInput.getClientInformation().getClientId())) {
+            modifiablePublishPacket.setRetain(true);
         }
     }
 }
