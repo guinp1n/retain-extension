@@ -20,6 +20,8 @@ import com.hivemq.extension.sdk.api.interceptor.publish.PublishInboundIntercepto
 import com.hivemq.extension.sdk.api.interceptor.publish.parameter.PublishInboundInput;
 import com.hivemq.extension.sdk.api.interceptor.publish.parameter.PublishInboundOutput;
 import com.hivemq.extension.sdk.api.packets.publish.ModifiablePublishPacket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -32,15 +34,18 @@ import java.nio.charset.StandardCharsets;
  * @since 4.36.0
  */
 public class HelloWorldInterceptor implements PublishInboundInterceptor {
+    private static final @NotNull Logger log = LoggerFactory.getLogger(HelloWorldInterceptor.class);
 
     @Override
     public void onInboundPublish(
             final @NotNull PublishInboundInput publishInboundInput,
             final @NotNull PublishInboundOutput publishInboundOutput) {
 
+        log.info("Received inbound publish from {}", publishInboundInput.getClientInformation().getClientId());
         final ModifiablePublishPacket modifiablePublishPacket = publishInboundOutput.getPublishPacket();
         if ("client1".equals(publishInboundInput.getClientInformation().getClientId())) {
             modifiablePublishPacket.setRetain(true);
+            log.info("Retaining client1 packet");
         }
     }
 }
