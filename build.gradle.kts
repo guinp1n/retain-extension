@@ -5,10 +5,10 @@ plugins {
 }
 
 group = "com.hivemq.extensions"
-description = "HiveMQ 4 Hello World Extension - a simple reference for all extension developers"
+description = "HiveMQ 4 Hello Retain Extension - adds Retain flag to incoming publishes"
 
 hivemqExtension {
-    name = "Hello World Extension"
+    name = "Hello Retain Extension"
     author = "HiveMQ"
     priority = 1000
     startPriority = 1000
