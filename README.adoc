@@ -31,9 +31,8 @@ We strongly recommend to read the {hivemq-extension-docs}[HiveMQ Extension Docum
 === Manual Testing
 
 Connect with https://hivemq.github.io/mqtt-cli/[MQTT-CLI] client ID 'client1'.
-Subscribe a verification client.
-Publish a message with Retain flag `false` from client ID 'client1'.
-You should see a received message with Retain flag `true`.
+Publish a message with Retain flag `false` from client ID 'client1' to topic 'test'.
+Subscribe a client to the same topic 'test'. It should receive the message with Retain flag `true` from the broker.
 
 === Automatic Testing
 
