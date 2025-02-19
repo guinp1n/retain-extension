@@ -20,7 +20,7 @@ We strongly recommend to read the {hivemq-extension-docs}[HiveMQ Extension Docum
 
 == Installation
 
-. Clone this repository into a Java 11 Gradle project.
+. Clone this repository into a Java 21 Gradle project.
 . Execute the Gradle task `hivemqExtensionZip` to build the extension.
 . Move the file: `build/hivemq-extension/retain-extension-4.36.0.zip` to the directory: `HIVEMQ_HOME/extensions`
 . Unzip the file.
